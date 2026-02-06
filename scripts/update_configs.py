@@ -61,7 +61,7 @@ def generate_html_content():
                 <button class="copy-btn">کپی</button>
             </div>
             <div class="config-content">
-                <textarea readonly>{content}</textarea>
+                <textarea readonly id="textarea-{i+1}" >{content}</textarea>
             </div>
         </div>
         """
