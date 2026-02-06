@@ -18,6 +18,8 @@ else:
     ]
 
 OUTPUT_FILE = os.path.join(os.getcwd(), "index.html")
+with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    f.write(html_content)
 
 TITLE = "V2Ray Config Aggregator"
 
