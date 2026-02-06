@@ -40,12 +40,11 @@ def fetch_config_content(url):
 def generate_html_content():
     all_sections_html = ""
     update_time = datetime.datetime.utcnow().isoformat()
-    sections_data = []  # برای نگه داشتن اطلاعات JSON جهت JS
+    sections_data = []
 
     for i, source_url in enumerate(CONFIG_SOURCES):
         content, source_name = fetch_config_content(source_url)
-
-        # تقسیم محتوا به خطوط غیر خالی
+        # تقسیم محتوا به خطوط غیرخالی
         configs = [line.strip() for line in content.splitlines() if line.strip()]
         sections_data.append({
             "id": f"source_{i}",
@@ -53,33 +52,53 @@ def generate_html_content():
             "configs": configs
         })
 
-    # در HTML می‌فرستیم JSON داخل یک <script> برای JS
+        # هر سکشن در دو ستون (فلکس)
+        # برای ساده سازی، هر منبع یک ستون است، بعد در CSS دو ستون نمایش داده می‌شود
+        section_html = f"""
+        <div class="config-column">
+            <div class="config-header">
+                کانفیگ {i+1} ({source_name.split('from ')[-1]})
+                <button class="copy-btn">کپی</button>
+            </div>
+            <div class="config-content">
+                <textarea readonly>{content}</textarea>
+            </div>
+        </div>
+        """
+        all_sections_html += section_html
+
+    # JSON برای JS
     sections_json = json.dumps(sections_data, ensure_ascii=False)
 
     final_html = f"""
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
-    <title>{TITLE}</title>
+<title>{TITLE}</title>
 </head>
 <body>
 <div class="container">
-    <h1>{TITLE}</h1>
-    <p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
+<h1>{TITLE}</h1>
+<p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
 
-    <div id="configs-container"></div>
-
-    <div class="update-info">
-        <p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
-    </div>
+<div class="grid" id="configs-container">
+{all_sections_html}
 </div>
 
+<div class="update-info">
+<p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
+</div>
+</div>
+
+<script>
+const sectionsData = {sections_json};
+</script>
 <script src="./script.js"></script>
 </body>
 </html>

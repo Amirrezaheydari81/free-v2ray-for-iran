@@ -1,21 +1,28 @@
-window.onload = function () {
-    const headers = document.querySelectorAll('.config-header');
-    headers.forEach(header => {
-        header.addEventListener('click', () => {
-            const content = header.nextElementSibling;
-            content.classList.toggle('active');
+document.addEventListener("DOMContentLoaded", () => {
+    // Toggle آکاردئون و دکمه کپی
+    document.querySelectorAll(".config-column").forEach(column => {
+        const header = column.querySelector(".config-header");
+        const content = column.querySelector(".config-content");
+        const copyBtn = header.querySelector(".copy-btn");
+
+        // Toggle نمایش
+        header.addEventListener("click", (e) => {
+            // اگر روی دکمه کپی کلیک شد، Toggle نکن
+            if (e.target === copyBtn) return;
+            content.classList.toggle("active");
         });
 
-        const copyBtn = header.querySelector('.copy-btn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', e => {
-                e.stopPropagation();
-                const textarea = header.nextElementSibling.querySelector('textarea');
-                textarea.select();
-                document.execCommand('copy');
-                copyBtn.innerText = '✔ کپی شد';
-                setTimeout(() => copyBtn.innerText = 'کپی', 2000);
-            });
-        }
+        // کپی فقط برای همین سکشن
+        copyBtn.addEventListener("click", () => {
+            const textarea = content.querySelector("textarea");
+            if (!textarea) return;
+            textarea.select();
+            document.execCommand("copy");
+
+            copyBtn.innerText = "کپی شد!";
+            setTimeout(() => {
+                copyBtn.innerText = "کپی";
+            }, 1500);
+        });
     });
-};
+});
