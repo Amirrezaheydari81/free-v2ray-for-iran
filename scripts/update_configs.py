@@ -3,109 +3,118 @@ import os
 import datetime
 import json
 
-CONFIG_SOURCES = [
-    "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt",
-    "https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt",
-    "https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt",
-]
+# =============================================================================
+# تنظیمات: این لیست را با آدرس‌های خام کانفیگ‌های V2Ray خود پر کنید
+# =============================================================================
+CONFIG_SOURCES_ENV = os.getenv("CONFIG_SOURCES", "")
 
-TITLE = "دانلود کانفیگ‌های V2Ray رایگان برای ایران"
-DESCRIPTION = "مجموعه‌ای از کانفیگ‌های V2Ray رایگان و آماده استفاده برای کاربران ایرانی. تمامی کانفیگ‌ها قابل کپی کردن و مستقیم استفاده در برنامه‌های V2Ray هستند."
-KEYWORDS = "V2Ray, کانفیگ V2Ray, دانلود V2Ray, فیلترشکن, پراکسی, وی پی ان"
+if CONFIG_SOURCES_ENV.strip():
+    CONFIG_SOURCES = [url.strip() for url in CONFIG_SOURCES_ENV.split(",") if url.strip()]
+else:
+    CONFIG_SOURCES = [
+        "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt",
+        "https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt",
+        "https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt",
+    ]
 
+TITLE = "V2Ray Config Aggregator"
+BASE_URL = "https://yourdomain.com/"  # دامنه سایتت رو اینجا قرار بده
+
+# ---------------------------------------------------------------------------
+# دریافت محتوای هر URL
+# ---------------------------------------------------------------------------
 def fetch_config_content(url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(url, headers=headers, timeout=15)
         response.raise_for_status()
-        return response.text
+        return response.text, f"Source from {url}"
     except requests.exceptions.RequestException as e:
-        return f"Error fetching {url}: {e}"
+        return f"Error fetching {url}: {e}", f"Error fetching {url}"
 
-def generate_html():
+# ---------------------------------------------------------------------------
+# تولید HTML
+# ---------------------------------------------------------------------------
+def generate_html_content():
     update_time = datetime.datetime.utcnow().isoformat()
-    all_configs = ""
+    sections_data = []
 
-    for source_url in CONFIG_SOURCES:
-        content = fetch_config_content(source_url)
-        lines = [line.strip() for line in content.splitlines() if line.strip()]
-        all_configs += "\n".join(lines) + "\n"
+    # جمع‌آوری همه کانفیگ‌ها
+    all_configs_text = ""
+    for i, source_url in enumerate(CONFIG_SOURCES):
+        content, source_name = fetch_config_content(source_url)
+        configs = [line.strip() for line in content.splitlines() if line.strip()]
+        sections_data.append({
+            "id": f"source_{i}",
+            "source_name": source_name,
+            "configs": configs
+        })
+        all_configs_text += "\n".join(configs) + "\n"
 
-    html_content = f"""<!DOCTYPE html>
+    sections_json = json.dumps(sections_data, ensure_ascii=False)
+
+    html_content = f"""
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{TITLE}</title>
-<meta name="description" content="{DESCRIPTION}">
-<meta name="keywords" content="{KEYWORDS}">
-<meta name="robots" content="index, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
-<style>
-body {{
-    font-family: 'Vazirmatn', monospace;
-    background: #f4f7f9;
-    margin: 0;
-    padding: 20px;
-}}
-.container {{
-    max-width: 1000px;
-    margin: auto;
-}}
-h1 {{
-    color: #2c3e50;
-    margin-bottom: 15px;
-}}
-textarea#all-configs {{
-    width: 100%;
-    height: 90vh;
-    font-family: monospace;
-    font-size: 14px;
-    padding: 10px;
-    resize: none;
-    box-sizing: border-box;
-}}
-.update-info {{
-    margin-top: 15px;
-    font-size: 0.85em;
-    color: #555;
-}}
-</style>
+<title>{TITLE}</title>
 </head>
 <body>
 <div class="container">
 <h1>{TITLE}</h1>
-<textarea id="all-configs" readonly>{all_configs}</textarea>
+<p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
+
+<!-- textarea بزرگ برای همه کانفیگ‌ها -->
+<textarea id="all-configs" readonly style="width:100%; height:80vh; font-family: monospace;">{all_configs_text}</textarea>
+
 <div class="update-info">
 <p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
-<p>آخرین به‌روزرسانی: {update_time} (UTC)</p>
 </div>
 </div>
+
+<script>
+// داده‌های کانفیگ‌ها برای استفاده در آینده
+const sectionsData = {sections_json};
+
+// امکان کپی سریع: کاربر می‌تواند Ctrl+A و سپس Ctrl+C بزند
+</script>
 </body>
 </html>
 """
     return html_content
 
-def generate_sitemap(base_url="https://yourdomain.com/"):
-    urls = ["index.html"]
+# ---------------------------------------------------------------------------
+# تولید سایت‌مپ
+# ---------------------------------------------------------------------------
+def generate_sitemap():
+    pages = ["index.html"]  # در صورت وجود صفحات دیگر، اینجا اضافه کن
     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    for url in urls:
-        sitemap_xml += f"  <url>\n    <loc>{base_url}{url}</loc>\n    <lastmod>{datetime.datetime.utcnow().date()}</lastmod>\n  </url>\n"
+    for page in pages:
+        sitemap_xml += f"  <url>\n"
+        sitemap_xml += f"    <loc>{BASE_URL}{page}</loc>\n"
+        sitemap_xml += f"    <lastmod>{datetime.datetime.utcnow().date()}</lastmod>\n"
+        sitemap_xml += f"  </url>\n"
     sitemap_xml += "</urlset>"
     return sitemap_xml
 
+# ---------------------------------------------------------------------------
+# اجرای اصلی
+# ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    # ذخیره HTML
-    html_file = "index.html"
-    with open(html_file, "w", encoding="utf-8") as f:
-        f.write(generate_html())
-    print(f"{html_file} با موفقیت ذخیره شد.")
+    # ساخت HTML
+    html_content = generate_html_content()
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html_content)
+    print("index.html با موفقیت ساخته شد ✅")
 
-    # ذخیره Sitemap
-    sitemap_file = "sitemap.xml"
-    with open(sitemap_file, "w", encoding="utf-8") as f:
-        f.write(generate_sitemap())
-    print(f"{sitemap_file} با موفقیت ذخیره شد.")
+    # ساخت سایت‌مپ
+    sitemap_content = generate_sitemap()
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
+        f.write(sitemap_content)
+    print("sitemap.xml با موفقیت ساخته شد ✅")
