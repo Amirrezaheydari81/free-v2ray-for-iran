@@ -1,0 +1,65 @@
+name: V2Ray Config Auto Update
+
+# تریگرها
+on:
+  # اجرای زمان‌بندی شده: هر 2 ساعت یکبار (بر اساس UTC)
+  schedule:
+    - cron: '0 */2 * * *'
+  
+  # امکان اجرای دستی از طریق تب Actions گیت‌هاب
+  workflow_dispatch:
+
+jobs:
+  update_and_push:
+    runs-on: ubuntu-latest
+    # این خط مهم است: مطمئن می‌شویم که این جاب فقط در صورتی اجرا شود که
+    # تغییراتی در فایل‌های پایتون ما یا منابع کانفیگ (اگر مستقیماً در YAML تعریف شده بود) وجود داشته باشد.
+    # در اینجا فقط اجرای هر دو حالت (زمان‌بندی و دستی) مد نظر است.
+    
+    steps:
+      # 1. دریافت کد از مخزن (Checkout)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # توکن دسترسی برای اجازه پوش کردن در مراحل بعدی
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. نصب پایتون
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      # 3. نصب وابستگی‌های مورد نیاز
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+          # اگر از کتابخانه‌های فارسی‌ساز (مثل arabic_reshaper) استفاده کردید اینجا اضافه کنید.
+
+      # 4. اجرای اسکریپت پایتون
+      - name: Run configuration update script
+        run: python scripts/update_configs.py
+      
+      # 5. بررسی و Push تغییرات
+      - name: Commit and Push changes
+        run: |
+          # بررسی کنید آیا فایل index.html تغییر کرده است
+          if git diff --exit-code index.html; then
+            echo "فایل index.html تغییری نکرده است. نیازی به Commit نیست."
+          else
+            echo "تغییرات در index.html یافت شد. Commit و Push انجام می‌شود..."
+            
+            # تنظیم مشخصات کاربر (GitHub Action Bot)
+            git config --global user.name "GitHub Action Bot"
+            git config --global user.email "action@github.com"
+            
+            # افزودن فایل تغییر یافته
+            git add index.html
+            
+            # کامیت کردن تغییرات
+            git commit -m "Automated Update: V2Ray configs refreshed (Cron Job)"
+            
+            # پوش کردن به شاخه اصلی (معمولاً main یا master)
+            # استفاده از token برای احراز هویت
+            git push
+          fi
