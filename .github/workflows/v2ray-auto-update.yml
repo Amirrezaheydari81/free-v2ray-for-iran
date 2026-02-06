@@ -1,0 +1,57 @@
+name: V2Ray Config Auto Update
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'   # هر ۲ ساعت (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update_and_push:
+    runs-on: ubuntu-latest
+
+    env:
+      OUTPUT_FILE: index.html
+      # اگر خواستی از ENV استفاده کنی (اختیاری)
+      # CONFIG_SOURCES: "https://raw.link/1,https://raw.link/2"
+      CONFIG_SOURCES: "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt,https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt,https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt"
+
+    steps:
+      # 1️⃣ دریافت کد ریپو
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ نصب پایتون
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3️⃣ نصب وابستگی‌ها
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      # 4️⃣ اجرای اسکریپت پایتون
+      - name: Run update script
+        run: |
+          python scripts/update_configs.py
+
+      # 5️⃣ Commit و Push فقط در صورت تغییر واقعی
+      - name: Commit and Push changes
+        run: |
+          if git diff --quiet; then
+            echo "❌ تغییری در خروجی وجود ندارد"
+          else
+            echo "✅ تغییر شناسایی شد، در حال Commit و Push..."
+
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            git add index.html
+            git commit -m "chore: auto update V2Ray configs"
+            git push
+          fi
