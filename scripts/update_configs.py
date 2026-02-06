@@ -99,13 +99,11 @@ textarea {{
 <body>
 <div class="container">
 <h1>{TITLE}</h1>
-
-<textarea readonly id="all-configs" placeholder="در حال بارگذاری کانفیگ‌ها...">{all_configs_text}</textarea>
-
 <div class="update-info">
 <p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
 <p>تمامی کانفیگ‌ها در یکجا برای کپی سریع آماده شده‌اند. برای کپی کل متن، Ctrl+A و سپس Ctrl+C را بزنید.</p>
 </div>
+<textarea readonly id="all-configs" placeholder="در حال بارگذاری کانفیگ‌ها...">{all_configs_text}</textarea>
 </div>
 </body>
 </html>
