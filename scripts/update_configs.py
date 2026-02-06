@@ -23,48 +23,6 @@ else:
 TITLE = "V2Ray Config Aggregator"
 
 
-# اسکریپت جاوا اسکریپت برای قابلیت کپی کردن
-JS_SCRIPT = """
-function setupCopyButtons() {
-    document.querySelectorAll('.config-header').forEach(header => {
-        if (header.getAttribute('data-setup') === 'true') return;
-        header.setAttribute('data-setup', 'true');
-
-        const sourceId = header.id.replace('header-', 'content-');
-        const contentDiv = document.getElementById(sourceId);
-
-        const copyButton = document.createElement('button');
-        copyButton.innerHTML = '<span class="icon">&#128206;</span> کپی';
-        copyButton.onclick = function() {
-            const textarea = contentDiv.querySelector('textarea');
-            if (textarea) {
-                textarea.select();
-                document.execCommand('copy');
-                copyButton.innerHTML = '<span class="icon">&#10003;</span> کپی شد!';
-                setTimeout(() => {
-                    copyButton.innerHTML = '<span class="icon">&#128206;</span> کپی';
-                }, 2000);
-            }
-        };
-
-        const toggleButton = document.createElement('span');
-        toggleButton.className = 'icon';
-        toggleButton.innerHTML = '&#9660;'; // مثلث رو به پایین
-
-        header.appendChild(toggleButton);
-
-        header.onclick = function() {
-            contentDiv.classList.toggle('active');
-            toggleButton.innerHTML = contentDiv.classList.contains('active') ? '&#9650;' : '&#9660;'; // مثلث بالا/پایین
-        };
-
-        header.style.cursor = 'pointer';
-        header.appendChild(copyButton);
-    });
-}
-window.onload = setupCopyButtons;
-"""
-
 def fetch_config_content(url):
     """دریافت محتوای خام یک URL."""
     try:
@@ -107,7 +65,7 @@ def generate_html_content():
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="./style.css">
     <title>{TITLE}</title>
 </head>
 <body>
@@ -122,38 +80,7 @@ def generate_html_content():
     </div>
 </div>
 
-<script>
-const sectionsData = {sections_json};
-
-const container = document.getElementById("configs-container");
-sectionsData.forEach(section => {{
-    const div = document.createElement("div");
-    div.className = "config-section";
-
-    const header = document.createElement("div");
-    header.className = "config-header";
-    header.id = "header-" + section.id;
-    header.textContent = section.source_name + " (تعداد کانفیگ: " + section.configs.length + ")";
-    div.appendChild(header);
-
-    const contentDiv = document.createElement("div");
-    contentDiv.className = "config-content";
-    contentDiv.id = "content-" + section.id;
-
-    // هر کانفیگ داخل <pre>
-    section.configs.forEach(cfg => {{
-        const pre = document.createElement("pre");
-        pre.textContent = cfg;
-        contentDiv.appendChild(pre);
-    }});
-
-    div.appendChild(contentDiv);
-    container.appendChild(div);
-}});
-
-// Toggle و Copy
-{JS_SCRIPT}
-</script>
+<script src="./script.js"></script>
 </body>
 </html>
 """

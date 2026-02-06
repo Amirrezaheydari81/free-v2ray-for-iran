@@ -1,87 +1,80 @@
 body {
   font-family: "Vazirmatn", sans-serif;
-  background-color: #f4f7f9;
-  color: #333;
+  background-color: #f0f4f8;
+  color: #1c1c1c;
   margin: 0;
   padding: 20px;
 }
-
 .container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-
 h1 {
-  color: #2c3e50;
-  font-size: 1.8em;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 10px;
+  text-align: center;
+  color: #1a73e8;
+  margin-bottom: 30px;
 }
-
-.config-section {
-  margin-bottom: 15px;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.config-column {
+  flex: 1 1 300px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
-
 .config-header {
-  background-color: #f9f9f9;
+  background-color: #1a73e8;
+  color: #fff;
   padding: 12px 15px;
   font-weight: bold;
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-  transition: background 0.3s;
 }
-
-.config-header:hover {
-  background-color: #eaf2f8;
-}
-
 .config-content {
   display: none;
   padding: 10px 15px;
-  background-color: #fff;
-  border-top: 1px solid #e1e4e8;
+  background: #f9fbff;
+  flex: 1;
 }
-
-.config-content pre {
-  background-color: #f0f4f8;
-  padding: 8px;
-  border-radius: 4px;
+.config-content.active {
+  display: block;
+}
+textarea {
+  width: 100%;
+  height: 120px;
   font-family: "Consolas", monospace;
-  font-size: 13px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #cbd5e0;
+  background: #f0f4f8;
+  resize: vertical;
 }
-
 button.copy-btn {
-  background-color: #2ecc71;
+  margin-top: 8px;
+  padding: 5px 10px;
+  background: #34a853;
   color: white;
   border: none;
-  padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 10px;
-  font-size: 0.9em;
+  font-size: 12px;
+  transition: background 0.3s;
 }
-
 button.copy-btn:hover {
-  background-color: #27ae60;
+  background: #2c8c44;
 }
-
 .update-info {
-  text-align: right;
-  font-size: 0.8em;
-  color: #7f8c8d;
-  margin-top: 20px;
-  border-top: 1px dashed #e1e4e8;
-  padding-top: 10px;
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #555;
 }
