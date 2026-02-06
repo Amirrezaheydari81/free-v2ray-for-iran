@@ -214,6 +214,7 @@ def generate_html_content():
 </body>
 </html>
     """
+    final_html += f"\n<!-- build timestamp: {datetime.datetime.utcnow().isoformat()} -->\n"
     return final_html
 
 if __name__ == "__main__":
@@ -232,13 +233,11 @@ if __name__ == "__main__":
             </div>
         </body>
         </html>
-        <!-- build: {datetime.datetime.utcnow().timestamp()} -->
         """
     else:
         print(f"شروع استخراج {len(CONFIG_SOURCES)} منبع...")
         html_content = generate_html_content()
         print("تولید HTML با موفقیت انجام شد.")
-
     # ذخیره فایل HTML نهایی در ریشه مخزن
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html_content)
