@@ -60,9 +60,7 @@ def generate_html_content():
                 کانفیگ {i+1} ({source_name.split('from ')[-1]})
                 <button class="copy-btn">کپی</button>
             </div>
-            <div class="config-content">
-                <textarea readonly id="textarea-{i+1}" >{content}</textarea>
-            </div>
+            <pre><code>{content}</code></pre>
         </div>
         """
         all_sections_html += section_html

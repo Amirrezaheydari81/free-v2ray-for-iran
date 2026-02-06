@@ -84,16 +84,19 @@ h1 {
   display: block;
 }
 
-.config-content textarea {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #cbd5e0;
-  border-radius: 5px;
-  padding: 10px;
+.config-content pre {
+  margin: 0;
+  padding: 12px;
+  background-color: #f0f4ff; /* تم آبی روشن */
+  color: #0d1b2a; /* متن تیره */
   font-family: "Consolas", monospace;
-  font-size: 12px;
-  resize: vertical;
-  box-sizing: border-box;
+  font-size: 13px;
+  border-radius: 6px;
+  overflow-x: auto;
+  max-height: 300px; /* ارتفاع سکشن */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+  white-space: pre-wrap; /* شکستن خطوط طولانی */
+  word-wrap: break-word;
 }
 
 /* ===== Update Info ===== */
