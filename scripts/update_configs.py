@@ -232,6 +232,7 @@ if __name__ == "__main__":
             </div>
         </body>
         </html>
+        <!-- build: {datetime.datetime.utcnow().timestamp()} -->
         """
     else:
         print(f"شروع استخراج {len(CONFIG_SOURCES)} منبع...")
