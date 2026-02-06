@@ -82,24 +82,32 @@ def generate_html_content():
 </head>
 <body>
 <div class="container">
-<h1>{TITLE}</h1>
+    <h1>{TITLE}</h1>
+
+
+    <!-- یک textarea بزرگ برای همه کانفیگ‌ها -->
+    <textarea id="all-configs" readonly placeholder="در حال بارگذاری کانفیگ‌ها..."></textarea>
+
+    <div class="update-info">
+        <p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
+    </div>
+</div>
 <p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
-
-<div class="grid" id="configs-container">
-{all_sections_html}
-</div>
-
-<div class="update-info">
-<p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
-</div>
-</div>
-
 <script>
 const sectionsData = {sections_json};
+
+// همه کانفیگ‌ها را در یک رشته بزرگ جمع می‌کنیم
+let allConfigs = "";
+sectionsData.forEach(sec => {
+    allConfigs += sec.configs.join("\n") + "\n";
+});
+
+// نمایش داخل textarea
+document.getElementById("all-configs").value = allConfigs;
 </script>
-<script src="./script.js"></script>
 </body>
 </html>
+
 """
     final_html += f"\n<!-- build timestamp: {datetime.datetime.utcnow().isoformat()} -->\n"
     return final_html
