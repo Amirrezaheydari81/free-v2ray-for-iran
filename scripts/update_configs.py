@@ -23,7 +23,7 @@ TITLE = "V2Ray Config Aggregator"
 # استایل‌های تمیز برای ظاهر حرفه‌ای
 CSS_STYLES = """
 body {
-    font-family: 'Tahoma', sans-serif;
+      font-family: "Vazirmatn", sans-serif;
     background-color: #f4f7f9;
     color: #333;
     margin: 0;
@@ -160,30 +160,23 @@ def fetch_config_content(url):
         return f"Error fetching {url}: {e}", f"Error fetching {url}"
 
 def generate_html_content():
-    """ساخت کل محتوای HTML نهایی."""
     all_sections_html = ""
     update_time = datetime.datetime.utcnow().isoformat()
+    sections_data = []  # برای نگه داشتن اطلاعات JSON جهت JS
 
     for i, source_url in enumerate(CONFIG_SOURCES):
         content, source_name = fetch_config_content(source_url)
 
-        # برای سادگی و اطمینان، محتوای دریافتی را مستقیماً درون تگ textarea می‌گذاریم.
-        # این کار شامل متن‌های خطا نیز می‌شود تا کاربر در جریان مشکلات قرار گیرد.
+        # تقسیم محتوا به خطوط غیر خالی
+        configs = [line.strip() for line in content.splitlines() if line.strip()]
+        sections_data.append({
+            "id": f"source_{i}",
+            "source_name": source_name,
+            "configs": configs
+        })
 
-        # ایجاد یک آیدی منحصر به فرد برای هر بخش
-        source_id = f"source_{i}"
-
-        section_html = f"""
-        <div class="config-section">
-            <div class="config-header" id="header-{source_id}">
-                <span>کانفیگ شماره {i+1} ({source_name.split('from ')[-1]})</span>
-            </div>
-            <div class="config-content" id="content-{source_id}">
-                <textarea readonly placeholder="Config Content Loading...">{content}</textarea>
-            </div>
-        </div>
-        """
-        all_sections_html += section_html
+    # در HTML می‌فرستیم JSON داخل یک <script> برای JS
+    sections_json = json.dumps(sections_data, ensure_ascii=False)
 
     final_html = f"""
 <!DOCTYPE html>
@@ -191,31 +184,63 @@ def generate_html_content():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
     <title>{TITLE}</title>
-    <style>
-        {CSS_STYLES}
-    </style>
+    
+    <style>{CSS_STYLES}</style>
 </head>
 <body>
-    <div class="container">
-        <h1>{TITLE}</h1>
-        <p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
+<div class="container">
+    <h1>{TITLE}</h1>
+    <p>آخرین به‌روزرسانی: {update_time} (اجرا شده توسط GitHub Action)</p>
 
-        {all_sections_html}
+    <div id="configs-container"></div>
 
-        <div class="update-info">
-            <p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
-        </div>
+    <div class="update-info">
+        <p>توجه: این صفحه توسط اسکریپت خودکار گیت‌هاب ساخته شده است.</p>
     </div>
+</div>
 
-    <script>
-        {JS_SCRIPT}
-    </script>
+<script>
+const sectionsData = {sections_json};
+
+const container = document.getElementById("configs-container");
+sectionsData.forEach(section => {{
+    const div = document.createElement("div");
+    div.className = "config-section";
+
+    const header = document.createElement("div");
+    header.className = "config-header";
+    header.id = "header-" + section.id;
+    header.textContent = section.source_name + " (تعداد کانفیگ: " + section.configs.length + ")";
+    div.appendChild(header);
+
+    const contentDiv = document.createElement("div");
+    contentDiv.className = "config-content";
+    contentDiv.id = "content-" + section.id;
+
+    // هر کانفیگ داخل <pre>
+    section.configs.forEach(cfg => {{
+        const pre = document.createElement("pre");
+        pre.textContent = cfg;
+        contentDiv.appendChild(pre);
+    }});
+
+    div.appendChild(contentDiv);
+    container.appendChild(div);
+}});
+
+// Toggle و Copy
+{JS_SCRIPT}
+</script>
 </body>
 </html>
-    """
+"""
     final_html += f"\n<!-- build timestamp: {datetime.datetime.utcnow().isoformat()} -->\n"
     return final_html
+
 
 if __name__ == "__main__":
     if not CONFIG_SOURCES:
