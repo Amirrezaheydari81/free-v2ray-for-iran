@@ -43,15 +43,13 @@ jobs:
       # 5️⃣ Commit و Push فقط در صورت تغییر واقعی
       - name: Commit and Push changes
         run: |
-          if git diff --quiet; then
-            echo "❌ تغییری در خروجی وجود ندارد"
+         if git diff --quiet; then
+            echo "❌ تغییری وجود ندارد"
           else
-            echo "✅ تغییر شناسایی شد، در حال Commit و Push..."
-
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-
             git add index.html
             git commit -m "chore: auto update V2Ray configs"
             git push
           fi
+
