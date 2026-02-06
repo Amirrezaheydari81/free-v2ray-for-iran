@@ -1,117 +1,101 @@
-/* ===== Global Styles ===== */
+/* ========= پایه ========= */
 body {
-  font-family: "Vazirmatn", Tahoma, sans-serif;
-  background-color: #f0f4f8;
-  color: #222;
+  font-family: "Vazirmatn", sans-serif;
+  background: #f4f7f9;
+  color: #333;
   margin: 0;
   padding: 20px;
 }
-
 .container {
   max-width: 1200px;
   margin: auto;
 }
-
-/* ===== Title ===== */
 h1 {
-  color: #0d3b66;
-  border-bottom: 3px solid #0d3b66;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 15px;
 }
 
-/* ===== Grid / Columns ===== */
+/* ========= Grid برای دو سکشن در هر ردیف ========= */
 .grid {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
 }
-
-.config-column {
-  flex: 1 1 calc(50% - 20px); /* دو ستون با فاصله */
-  min-height: 300px;
-  background-color: #fff;
+.config-section {
+  flex: 1 1 calc(50% - 10px); /* دو ستون */
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   transition: transform 0.2s;
 }
-
-.config-column:hover {
+.config-section:hover {
   transform: translateY(-3px);
 }
 
-/* ===== Header ===== */
+/* ========= Header آکاردئون ========= */
 .config-header {
-  background-color: #0d3b66;
-  color: #fff;
-  padding: 12px 16px;
-  font-weight: 600;
+  background: #1e40af;
+  color: white;
+  padding: 10px 15px;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
 }
-
-.config-header button.copy-btn {
-  background-color: #1fa2ff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.3s;
+.config-header .icon {
+  transition: transform 0.3s;
+}
+.config-header.active .icon {
+  transform: rotate(180deg);
 }
 
-.config-header button.copy-btn:hover {
-  background-color: #0c7cd5;
-}
-
-/* ===== Content ===== */
+/* ========= Content ========= */
 .config-content {
-  display: none;
-  padding: 12px 16px;
   flex: 1;
+  display: none;
+  padding: 10px 15px;
+  background: #f9fafe;
   overflow-y: auto;
-  background-color: #f9fbff;
 }
-
 .config-content.active {
   display: block;
 }
 
+/* ========= Code/Config ========= */
 .config-content pre {
   margin: 0;
-  padding: 12px;
-  background-color: #f0f4ff; /* تم آبی روشن */
-  color: #0d1b2a; /* متن تیره */
   font-family: "Consolas", monospace;
-  font-size: 13px;
-  border-radius: 6px;
-  overflow-x: auto;
-  max-height: 300px; /* ارتفاع سکشن */
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
-  white-space: pre-wrap; /* شکستن خطوط طولانی */
-  word-wrap: break-word;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-/* ===== Update Info ===== */
+/* ========= دکمه کپی ========= */
+.copy-btn {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+.copy-btn:hover {
+  background: #27ae60;
+}
+
+/* ========= Update info ========= */
 .update-info {
-  text-align: center;
-  font-size: 0.85em;
+  text-align: right;
+  font-size: 0.8em;
   color: #7f8c8d;
-  margin-top: 30px;
-  border-top: 1px dashed #cbd5e0;
-  padding-top: 15px;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 900px) {
-  .config-column {
-    flex: 1 1 100%;
-  }
+  margin-top: 20px;
+  border-top: 1px dashed #ecf0f1;
+  padding-top: 10px;
 }
