@@ -162,7 +162,7 @@ def fetch_config_content(url):
 def generate_html_content():
     """ساخت کل محتوای HTML نهایی."""
     all_sections_html = ""
-    update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    update_time = datetime.datetime.utcnow().isoformat()
 
     for i, source_url in enumerate(CONFIG_SOURCES):
         content, source_name = fetch_config_content(source_url)
