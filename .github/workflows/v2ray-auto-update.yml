@@ -2,7 +2,7 @@ name: V2Ray Config Auto Update
 
 on:
   schedule:
-    - cron: '0 */2 * * *'   # هر ۲ ساعت (UTC)
+    - cron: "0 */2 * * *" # هر ۲ ساعت (UTC)
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       # 3️⃣ نصب وابستگی‌ها
       - name: Install dependencies
@@ -43,13 +43,14 @@ jobs:
       # 5️⃣ Commit و Push فقط در صورت تغییر واقعی
       - name: Commit and Push changes
         run: |
-         if git diff --quiet; then
-            echo "❌ تغییری وجود ندارد"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add index.html
-            git commit -m "chore: auto update V2Ray configs"
-            git push
-          fi
-
+          if git diff --quiet; then
+             echo "❌ تغییری وجود ندارد"
+           else
+             git config user.name "github-actions[bot]"
+             git config user.email "github-actions[bot]@users.noreply.github.com"
+             git add index.html
+             git commit -m "chore: auto update V2Ray configs"
+             git add sitemap.xml
+             git commit -m "Add sitemap.xml"
+             git push
+           fi
