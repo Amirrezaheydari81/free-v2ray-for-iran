@@ -2,6 +2,8 @@ import requests
 import os
 from bs4 import BeautifulSoup
 import datetime
+import json
+
 
 # =============================================================================
 # تنظیمات: این لیست را با آدرس‌های خام کانفیگ‌های V2Ray خود پر کنید
