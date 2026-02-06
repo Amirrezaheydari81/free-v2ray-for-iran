@@ -6,13 +6,18 @@ import datetime
 # =============================================================================
 # تنظیمات: این لیست را با آدرس‌های خام کانفیگ‌های V2Ray خود پر کنید
 # =============================================================================
-CONFIG_SOURCES = [
-    "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt",
-    "https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt",
-    "https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt",
-]
+CONFIG_SOURCES_ENV = os.getenv("CONFIG_SOURCES", "")
 
-OUTPUT_FILE = "index.html"
+if CONFIG_SOURCES_ENV.strip():
+    CONFIG_SOURCES = [url.strip() for url in CONFIG_SOURCES_ENV.split(",") if url.strip()]
+else:
+    CONFIG_SOURCES = [
+        "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt",
+        "https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt",
+        "https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt",
+    ]
+
+OUTPUT_FILE = os.getenv("OUTPUT_FILE", "index.html")
 TITLE = "V2Ray Config Aggregator"
 
 # استایل‌های تمیز برای ظاهر حرفه‌ای
