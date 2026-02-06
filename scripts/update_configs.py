@@ -17,9 +17,6 @@ else:
         "https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt",
     ]
 
-OUTPUT_FILE = os.path.join(os.getcwd(), "index.html")
-with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-    f.write(html_content)
 
 TITLE = "V2Ray Config Aggregator"
 
@@ -242,6 +239,7 @@ if __name__ == "__main__":
         html_content = generate_html_content()
         print("تولید HTML با موفقیت انجام شد.")
     # ذخیره فایل HTML نهایی در ریشه مخزن
+    OUTPUT_FILE = os.path.join(os.getcwd(), "index.html")
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html_content)
 
