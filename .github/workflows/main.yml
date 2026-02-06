@@ -51,6 +51,6 @@ jobs:
             git config user.email "github-actions[bot]@users.noreply.github.com"
 
             git add $OUTPUT_FILE
-            git commit -m "chore: auto update V2Ray configs"
+            git commit -m "fix: force html change per run"
             git push
           fi
