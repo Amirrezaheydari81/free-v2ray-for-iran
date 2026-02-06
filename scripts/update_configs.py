@@ -17,7 +17,8 @@ else:
         "https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt",
     ]
 
-OUTPUT_FILE = os.getenv("OUTPUT_FILE", "index.html")
+OUTPUT_FILE = os.path.join(os.getcwd(), "index.html")
+
 TITLE = "V2Ray Config Aggregator"
 
 # استایل‌های تمیز برای ظاهر حرفه‌ای
