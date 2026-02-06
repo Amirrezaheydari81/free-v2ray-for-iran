@@ -1,0 +1,87 @@
+body {
+  font-family: "Vazirmatn", sans-serif;
+  background-color: #f4f7f9;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  color: #2c3e50;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.config-section {
+  margin-bottom: 15px;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.config-header {
+  background-color: #f9f9f9;
+  padding: 12px 15px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.config-header:hover {
+  background-color: #eaf2f8;
+}
+
+.config-content {
+  display: none;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-top: 1px solid #e1e4e8;
+}
+
+.config-content pre {
+  background-color: #f0f4f8;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: "Consolas", monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+button.copy-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 0.9em;
+}
+
+button.copy-btn:hover {
+  background-color: #27ae60;
+}
+
+.update-info {
+  text-align: right;
+  font-size: 0.8em;
+  color: #7f8c8d;
+  margin-top: 20px;
+  border-top: 1px dashed #e1e4e8;
+  padding-top: 10px;
+}

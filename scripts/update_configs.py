@@ -22,88 +22,6 @@ else:
 
 TITLE = "V2Ray Config Aggregator"
 
-# استایل‌های تمیز برای ظاهر حرفه‌ای
-CSS_STYLES = """
-body {
-      font-family: "Vazirmatn", sans-serif;
-    background-color: #f4f7f9;
-    color: #333;
-    margin: 0;
-    padding: 20px;
-}
-.container {
-    max-width: 1000px;
-    margin: auto;
-    background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-h1 {
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-.config-section {
-    margin-bottom: 30px;
-    padding: 15px;
-    border: 1px solid #ecf0f1;
-    border-radius: 6px;
-    background-color: #fafafa;
-}
-.config-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #2980b9;
-}
-.config-content {
-    display: none; /* پنهان کردن پیش‌فرض */
-}
-.config-content.active {
-    display: block;
-}
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    font-family: 'Consolas', monospace;
-    font-size: 12px;
-    resize: vertical;
-    box-sizing: border-box;
-    margin-top: 5px;
-}
-button {
-    background-color: #2ecc71;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-left: 10px;
-}
-button:hover {
-    background-color: #27ae60;
-}
-.icon {
-    font-size: 1.2em;
-}
-.update-info {
-    text-align: right;
-    font-size: 0.8em;
-    color: #7f8c8d;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px dashed #ecf0f1;
-}
-"""
 
 # اسکریپت جاوا اسکریپت برای قابلیت کپی کردن
 JS_SCRIPT = """
@@ -189,9 +107,8 @@ def generate_html_content():
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
     <title>{TITLE}</title>
-    
-    <style>{CSS_STYLES}</style>
 </head>
 <body>
 <div class="container">
