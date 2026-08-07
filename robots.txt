@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://amirrezaheydari81.github.io/free-v2ray-for-iran/sitemap.xml
