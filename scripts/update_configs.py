@@ -1,6 +1,6 @@
 import requests
 import os
-import datetime
+from datetime import datetime, timezone
 import json
 
 # =============================================================================
@@ -113,11 +113,9 @@ textarea {{
 # ---------------------------------------------------------------------------
 # تولید سایت‌مپ
 # ---------------------------------------------------------------------------
-from datetime import datetime, timezone
 
 def generate_sitemap():
     pages = ["index.html"]
-    # استفاده از زمان دقیق با ساعت و دقیقه (نه فقط تاریخ)
     update_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     
     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
