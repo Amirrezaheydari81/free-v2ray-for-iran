@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import json
 
 # =============================================================================
-# تنظیمات: این لیست را با آدرس‌های خام کانفیگ‌های V2Ray خود پر کنید
+# تنظیمات
 # =============================================================================
 CONFIG_SOURCES_ENV = os.getenv("CONFIG_SOURCES", "")
 
@@ -20,7 +20,7 @@ else:
 TITLE = "V2Ray کانفیگ - جمع‌آوری و دانلود"
 META_DESCRIPTION = "بهترین و جدیدترین کانفیگ‌های V2Ray به صورت یکجا. کپی سریع و استفاده آسان برای کاربران ایرانی."
 META_KEYWORDS = "V2Ray, کانفیگ V2Ray, وی پی ان, پروکسی, ابزار اینترنت, دانلود کانفیگ"
-BASE_URL = "https://amirrezaheydari81.github.io/free-v2ray-for-iran/"  # دامنه سایتت رو اینجا قرار بده
+BASE_URL = "https://amirrezaheydari81.github.io/free-v2ray-for-iran/"
 
 # ---------------------------------------------------------------------------
 # دریافت محتوای هر URL
@@ -38,7 +38,7 @@ def fetch_config_content(url):
 # تولید HTML
 # ---------------------------------------------------------------------------
 def generate_html_content():
-    update_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    update_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     all_configs_text = ""
 
     for source_url in CONFIG_SOURCES:
@@ -113,7 +113,6 @@ textarea {{
 # ---------------------------------------------------------------------------
 # تولید سایت‌مپ
 # ---------------------------------------------------------------------------
-
 def generate_sitemap():
     pages = ["index.html"]
     update_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
