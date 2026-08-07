@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
@@ -34,14 +34,34 @@ jobs:
         run: |
           python scripts/update_configs.py
 
+      - name: Force update sitemap timestamp
+        run: |
+          # اجرای مجدد برای آپدیت lastmod در sitemap.xml
+          python scripts/update_configs.py
+          touch sitemap.xml
+
       - name: Commit and Push changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add index.html sitemap.xml
-            git commit -m "chore: auto update V2Ray configs [skip ci]"
+            git commit -m "chore: update configs & sitemap [skip ci]"
             git push
           else
             echo "❌ تغییری وجود ندارد"
           fi
+
+      - name: Notify Google (IndexNow)
+        if: success()
+        run: |
+          curl -s -X POST "https://www.bing.com/indexnow" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "host": "amirrezaheydari81.github.io",
+              "key": "free-v2ray-for-iran",
+              "urlList": [
+                "https://amirrezaheydari81.github.io/free-v2ray-for-iran/",
+                "https://amirrezaheydari81.github.io/free-v2ray-for-iran/sitemap.xml"
+              ]
+            }' || true
