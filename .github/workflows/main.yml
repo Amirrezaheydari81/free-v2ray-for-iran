@@ -1,0 +1,48 @@
+name: V2Ray Config Auto Update
+
+on:
+  schedule:
+    - cron: "0 */2 * * *" # هر ۲ ساعت (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update_and_push:
+    runs-on: ubuntu-latest
+
+    env:
+      OUTPUT_FILE: index.html
+      CONFIG_SOURCES: "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt,https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt,https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip' # افزایش سرعت با کش کردن پکیج‌ها
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run update script
+        run: |
+          python scripts/update_configs.py
+
+      - name: Commit and Push changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add index.html sitemap.xml
+            git commit -m "chore: auto update V2Ray configs [skip ci]"
+            git push
+          else
+            echo "❌ تغییری وجود ندارد"
+          fi
