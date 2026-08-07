@@ -14,43 +14,60 @@ jobs:
 
     env:
       OUTPUT_FILE: index.html
-      # اگر خواستی از ENV استفاده کنی (اختیاری)
-      # CONFIG_SOURCES: "https://raw.link/1,https://raw.link/2"
       CONFIG_SOURCES: "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt,https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/v2ray_configs/seperated_by_protocol/vless.txt,https://github.com/Epodonios/v2ray-configs/raw/refs/heads/main/All_Configs_Sub.txt"
 
     steps:
-      # 1️⃣ دریافت کد ریپو
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ نصب پایتون
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: 'pip' # 🚀 کش کردن پکیج‌ها برای افزایش سرعت
 
-      # 3️⃣ نصب وابستگی‌ها
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install requests beautifulsoup4
 
-      # 4️⃣ اجرای اسکریپت پایتون
       - name: Run update script
         run: |
           python scripts/update_configs.py
 
-      # 5️⃣ Commit و Push فقط در صورت تغییر واقعی
+      - name: Generate sitemap.xml
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          OWNER="${{ github.repository_owner }}"
+          
+          # هندل کردن هوشمند دامنه اصلی (User Page) و ساب‌دامین (Project Page)
+          if [ "${REPO_NAME}" = "${OWNER}.github.io" ]; then
+            SITE_URL="https://${OWNER}.github.io/"
+          else
+            SITE_URL="https://${OWNER}.github.io/${REPO_NAME}/"
+          fi
+          
+          CURRENT_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          printf '<?xml version="1.0" encoding="UTF-8"?>\n' > sitemap.xml
+          printf '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' >> sitemap.xml
+          printf '  <url>\n' >> sitemap.xml
+          printf '    <loc>%s</loc>\n' "${SITE_URL}" >> sitemap.xml
+          printf '    <lastmod>%s</lastmod>\n' "${CURRENT_DATE}" >> sitemap.xml
+          printf '    <changefreq>hourly</changefreq>\n' >> sitemap.xml
+          printf '    <priority>1.0</priority>\n' >> sitemap.xml
+          printf '  </url>\n' >> sitemap.xml
+          printf '</urlset>\n' >> sitemap.xml
+
       - name: Commit and Push changes
         run: |
-          if git diff --quiet; then
-             echo "❌ تغییری وجود ندارد"
-           else
-             git config user.name "github-actions[bot]"
-             git config user.email "github-actions[bot]@users.noreply.github.com"
-             git add index.html
-             git commit -m "chore: auto update V2Ray configs"
-             git add sitemap.xml
-             git commit -m "Add sitemap.xml"
-             git push
-           fi
+          # 🚀 فیکس باگ تشخیص تغییرات: git status --porcelain فایل‌های Untracked رو هم می‌بینه
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add index.html sitemap.xml
+            git commit -m "chore: auto update V2Ray configs & sitemap [skip ci]"
+            git push
+          else
+            echo "❌ تغییری وجود ندارد"
+          fi
