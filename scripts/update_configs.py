@@ -113,14 +113,21 @@ textarea {{
 # ---------------------------------------------------------------------------
 # تولید سایت‌مپ
 # ---------------------------------------------------------------------------
+from datetime import datetime, timezone
+
 def generate_sitemap():
     pages = ["index.html"]
+    # استفاده از زمان دقیق با ساعت و دقیقه (نه فقط تاریخ)
+    update_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    
     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for page in pages:
         sitemap_xml += f"  <url>\n"
         sitemap_xml += f"    <loc>{BASE_URL}{page}</loc>\n"
-        sitemap_xml += f"    <lastmod>{datetime.datetime.utcnow().date()}</lastmod>\n"
+        sitemap_xml += f"    <lastmod>{update_time}</lastmod>\n"
+        sitemap_xml += f"    <changefreq>hourly</changefreq>\n"
+        sitemap_xml += f"    <priority>1.0</priority>\n"
         sitemap_xml += f"  </url>\n"
     sitemap_xml += "</urlset>"
     return sitemap_xml
