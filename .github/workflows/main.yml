@@ -34,12 +34,6 @@ jobs:
         run: |
           python scripts/update_configs.py
 
-      - name: Force update sitemap timestamp
-        run: |
-          # اجرای مجدد برای آپدیت lastmod در sitemap.xml
-          python scripts/update_configs.py
-          touch sitemap.xml
-
       - name: Commit and Push changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
